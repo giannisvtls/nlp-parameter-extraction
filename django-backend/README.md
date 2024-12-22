@@ -1,60 +1,142 @@
-# Intelligencia Django Backend Assessment
+# AI-Enhanced Django Backend
 
-A Django application to serve as RESTful API backend. 
+A Django backend service that provides WebSocket communication for real-time chat analysis using OpenAI's API, with PostgreSQL for data storage and Redis for WebSocket channel layers.
 
-## Requirements
+## 🔑 Key Features
 
-In order to run the project locally the following requirements should be already installed:
+- WebSocket integration using Django Channels
+- Real-time message processing with OpenAI API
+- Dynamic SQL query generation
+- RESTful API endpoints
+- PostgreSQL database integration
+- Redis for WebSocket channel layers
+- OpenAPI documentation
 
-* Python >=3.12
-* Pipenv
-* PostgreSQL
+## 🛠️ Tech Stack
 
-## Running the project
+- Django
+- Django Channels
+- OpenAI API
+- PostgreSQL
+- Redis
+- Swagger/OpenAPI
 
-### Configuration
+## 📋 Requirements
 
-Create a `.env` file in the root folder of the project \
-Copy the environment variables from the `.env.sample` to the `.env` file \
-Fill the Database configuration
+- Python >=3.12
+- PostgreSQL
+- Redis
+- OpenAI API Key
 
+## 🚀 Running the Project
 
-### Run Locally
+### Local Development Setup
 
-#### If you haven't already, create the database:
+1. Create a virtual environment:
+```bash
+pipenv shell
+```
 
+2. Install dependencies:
+```bash
+pipenv install
+```
+
+3. Create PostgreSQL database:
 ```sql
 CREATE DATABASE efo_db;
 ```
 
-#### Install dependencies
+4. Configure environment variables:
+   - Copy `.env.sample` to `.env`
+   - Fill in required variables:
+     ```
+     SECRET_KEY=your_secret_key
+     DB_NAME=efo_db
+     DB_USER=postgres
+     DB_PASS=postgres
+     DB_HOST=localhost
+     DB_PORT=5432
+     REDIS_HOST=localhost
+     REDIS_PORT=6379
+     OPENAI_API_KEY=your_api_key
+     ```
 
-To activate this project's virtualenv, run the following command:
-```shell
-pipenv shell
-```
-To install all project dependencies you can run the following command:
-```shell
-pipenv install
-```
-
-#### Apply migrations
-
-To apply any pending database migrations you can run the following command:
-
-```shell
-pipenv run python manage.py migrate
-```
-
-#### Serve API
-
-The easiest way to run the project is to execute the following command:
-
-```shell
-pipenv run python manage.py runserver
+5. Apply migrations:
+```bash
+python manage.py migrate
 ```
 
-## Documentation
+6. Start the development server:
+```bash
+python manage.py runserver
+```
 
-After running the project, you can access the OpenApi documentation and interact with the API using the built-in
-[swagger interface](http://127.0.0.1:8000/api/docs).
+### Docker Setup
+
+The backend can also be run using Docker:
+
+```bash
+docker-compose up backend
+```
+
+## 🔌 WebSocket Endpoints
+
+- Chat Connection: `ws://localhost:8000/ws/chat/`
+
+### Message Format
+```json
+{
+    "type": "message",
+    "content": "your message here"
+}
+```
+
+## 🌐 API Documentation
+
+Access the OpenAPI documentation at:
+- Local: http://localhost:8000/api/docs
+- Docker: http://localhost:8000/api/docs
+
+## 📝 Development Guidelines
+
+### Code Style
+- Follow PEP 8 guidelines
+- Use Django's coding style
+- Type hints for Python functions
+
+## 🔧 Project Structure
+
+```
+django-backend/
+├── api/                  # API application
+│   ├── migrations/      # Database migrations
+│   ├── serializers/     # API serializers
+│   │   ├── api.py
+│   │   └── metadata.py
+│   ├── templates/       # API templates
+│   │   └── swagger-ui.html
+│   ├── admin.py        # Admin interface configuration
+│   ├── apps.py         # App configuration
+│   ├── consumers.py    # WebSocket consumers
+│   ├── models.py       # Database models
+│   ├── routing.py      # WebSocket routing
+│   ├── test.py         # Test files
+│   ├── urls.py         # URL configurations
+│   └── views.py        # API views
+├── app/                 # Core application
+├── .dockerignore       # Docker ignore file
+├── .env.docker         # Docker environment variables
+├── .env.sample         # Sample environment file
+├── .gitignore         # Git ignore file
+├── Dockerfile         # Docker configuration
+├── entrypoint.sh      # Docker entrypoint script
+├── manage.py          # Django management script
+├── Pipfile           # Pipenv dependencies
+├── Pipfile.lock      # Pipenv lock file
+└── README.md         # Project documentation
+```
+
+## 📄 License
+
+This project is licensed under the MIT License.
