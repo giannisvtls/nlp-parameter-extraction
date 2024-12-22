@@ -1,0 +1,13 @@
+#root {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+  }
+  
+  .ant-card {
+    background-color: #f4f5f9 !important;
+  }
