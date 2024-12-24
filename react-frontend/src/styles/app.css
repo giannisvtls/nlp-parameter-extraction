@@ -9,5 +9,79 @@
   }
   
   .ant-card {
-    background-color: #f4f5f9 !important;
+    background-color: snow !important;
   }
+
+  .message-container-card {
+
+    /* style={{
+      minWidth: '600px',
+      minHeight: '500px',
+      borderRadius: 0,
+      overflow: 'hidden',
+      border: 'none'
+    }} */
+
+    min-width: 600px;
+    min-height: 500px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 0px solid transparent;
+    background-color: #d9dedd !important;
+
+    .sendbox-input {
+      border-bottom-left-radius: 8px;
+    }
+    .ant-list-items {
+      .outgoing-message {
+        .ant-list-item-meta {
+          display: flex;
+          flex-direction: row-reverse !important;
+          text-align: right;
+        }
+      }
+    
+      .incoming-message {
+        .ant-list-item-meta {
+          display: flex;
+          text-align: left;
+        }
+      }
+  
+      .ant-list-item-meta-avatar {
+        margin-inline-end: 8px !important;
+        margin-inline-start: 8px !important;
+      }
+  
+      .ant-list-item-meta-title {
+        margin: 6px 0px 6px 0px !important;
+      }
+    }
+  }
+
+
+  /* For Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;  /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;  /* Color of the track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;  /* Color of the scroll thumb */
+  border-radius: 10px;
+  transition: background 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;  /* Darker color when hovering */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;  /* "auto" or "thin" */
+  scrollbar-color: #888 #f1f1f1;  /* thumb and track color */
+}

@@ -22,9 +22,9 @@ RUN pipenv install --system --deploy
 # Copy project
 COPY . .
 
-# Make the entrypoint script executable
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+# Instead of just copying to ., specify the full path
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Set the entrypoint
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]

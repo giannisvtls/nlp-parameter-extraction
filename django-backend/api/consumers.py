@@ -1,5 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+import asyncio
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -23,12 +24,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         username = text_data_json.get('username', 'Anonymous')
 
+        # Send the original message to the group
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
                 'message': message,
                 'username': username
+            }
+        )
+
+        # Send automatic reply
+        auto_reply = f"Automatic reply to: {message}"
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': auto_reply,
+                'username': 'Bot'  # You can customize the bot username
             }
         )
 

@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import { Col, Row, Typography, Card, Grid } from 'antd';
 import SearchForm from '../components/SearchForm';
 import ChatComponent from '../components/ChatComponent';
+import ChatContainer from '../components/ChatContainer';
 
 // Constant Declarations
 const { Title } = Typography
@@ -29,10 +30,18 @@ const MessagesScreen = () => {
           <Title>EFO Term Table with search</Title>
         </Col>
       </Row>
-      <ChatComponent
+      <Row justify="center" align="middle">
+        <Col xs={24} style={{
+          display: 'flex',
+          justifyContent: 'center'
+        }}>
+          <ChatContainer />
+        </Col>
+      </Row>
+      {/* <ChatComponent
         currentUser={{ name: 'Giannis', avatarUrl: 'https://public-storage-development.s3.eu-central-1.amazonaws.com/6051da0573c0fe08d75193d4/ZV49Oxa-pokemon.jpg' }}
         defaultAvatar="/default-avatar.png"
-      />
+      /> */}
     </Card>
 
   )
