@@ -25,7 +25,7 @@ urlpatterns = [
 if settings.DEV_DOCS:
     urlpatterns += [
         path('api/openapi', get_schema_view(
-            title="Intelligencia Assessment API",
+            title="NLP Assignement Parameter Extraction",
             public=True,
             permission_classes=(permissions.AllowAny,)
         ), name='openapi-schema'),

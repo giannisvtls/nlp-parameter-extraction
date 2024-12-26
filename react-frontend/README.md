@@ -1,4 +1,4 @@
-# Intelligencia React Frontend Assessment
+# NLP Parameter Extraction React Frontend Assessment
 
 A React application built with Vite that retrieves and displays data from the back-end infrastacture
 

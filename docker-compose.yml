@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   backend:
+    entrypoint: ["/bin/sh", "/app/entrypoint.sh"]
     build:
       context: ./django-backend
       dockerfile: Dockerfile

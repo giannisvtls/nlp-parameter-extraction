@@ -26,7 +26,7 @@ const MessagesLayout = ({ children }) => {
           textAlign: 'center'
         }}
       >
-        Intelligencia FE Assessment ©{new Date().getFullYear()} Created by Yannis Vitalis
+         NLP Parameter Extraction ©{new Date().getFullYear()} Created by Yannis Vitalis Elenh Traxanidou, George Parnalis-Palantzidis
       </Footer>
     </Layout>
   )

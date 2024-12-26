@@ -1,1 +1,1 @@
-PROJECT_NAME = "IntelligenciaAssessment"
+PROJECT_NAME = "NLPParameterExtraction"
