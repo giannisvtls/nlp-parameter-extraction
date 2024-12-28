@@ -1,14 +1,9 @@
 from django.db import models
 
-class EfoTerm(models.Model):
-    term = models.TextField(unique=True)
-
+class User(models.Model):
+    iban = models.TextField(unique=True)
+    name = models.TextField(unique=True)
+    balance = models.IntegerField()
+    
     def __str__(self):
-        return self.term
-
-class EfoTermSynonym(models.Model):
-    label = models.TextField()
-    efo_term = models.ForeignKey(EfoTerm, related_name='synonyms', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.label
+        return self.iban

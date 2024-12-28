@@ -5,7 +5,7 @@ from rest_framework import permissions
 from rest_framework.schemas import get_schema_view
 from rest_framework.routers import DefaultRouter
 from .views import (
-    EfoTermViewSet,
+    UserViewSet,
     IndexView,
     ChatRoomView,
     WSCheckView
@@ -13,7 +13,7 @@ from .views import (
 from app.metadata import PROJECT_NAME
 
 router = DefaultRouter()
-router.register(r'api/efoterms', EfoTermViewSet)
+router.register(r'api/users', UserViewSet)
 
 urlpatterns = [
     path('', IndexView.as_view(), name='root'),

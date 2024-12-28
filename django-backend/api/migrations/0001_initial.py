@@ -4,26 +4,16 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 class Migration(migrations.Migration):
-
     initial = True
-
-    dependencies = [
-    ]
-
+    dependencies = []
     operations = [
         migrations.CreateModel(
-            name='EfoTerm',
+            name='User',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('term', models.TextField(unique=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='EfoTermSynonym',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('label', models.TextField()),
-                ('efo_term', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='synonyms', to='api.efoterm')),
+                ('name', models.TextField(unique=True)),
+                ('iban', models.TextField(unique=True)),
+                ('balance', models.IntegerField())
             ],
         ),
     ]
