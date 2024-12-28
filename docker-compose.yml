@@ -39,6 +39,8 @@ services:
       - VITE_WS_URL=ws://localhost:8000/ws
     depends_on:
       - backend
+    # Add this command to ensure dependencies are installed
+    command: sh -c "npm install && npm run dev -- --host"
 
   db:
     image: postgres:14
