@@ -1,6 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 import asyncio
+from api.services.user_service import UserService
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -23,6 +24,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         username = text_data_json.get('username', 'Anonymous')
+
+        # Create random user on receive message
+        # user, result = await self.user_service.create_user(username)
 
         # Send the original message to the group
         await self.channel_layer.group_send(
