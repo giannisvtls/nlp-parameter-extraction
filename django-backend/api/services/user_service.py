@@ -23,25 +23,6 @@ class UserService:
             return user, "User created successfully"
         except Exception as e:
             return None, str(e)
-    
-    @database_sync_to_async
-    def create_user(self, name, iban, initial_balance=0):
-        """
-        Asynchronously create a new user with IBAN and balance
-        Returns tuple of (user, message)
-        """
-        try:
-            if User.objects.filter(models.Q(iban=iban) | models.Q(name=name)).exists():
-                return None, "User with this IBAN or name already exists"
-                
-            user = User.objects.create(
-                name=name,
-                iban=iban,
-                balance=initial_balance
-            )
-            return user, "User created successfully"
-        except Exception as e:
-            return None, str(e)
 
     @database_sync_to_async
     def transfer_money(self, from_user, amount, to_iban):
