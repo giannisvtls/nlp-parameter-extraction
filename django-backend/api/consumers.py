@@ -43,7 +43,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         # Send automatic reply
-        auto_reply = f"Automatic reply to22: {message}"
+        auto_reply = f"Automatic reply to: {message}"
         await self.channel_layer.group_send(
             self.room_group_name,
             {

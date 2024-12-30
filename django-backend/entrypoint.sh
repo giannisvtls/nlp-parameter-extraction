@@ -1,21 +1,26 @@
 #!/bin/bash
-# Wait for postgres
-echo "Waiting for PostgreSQL..."
-while ! nc -z db 5432; do
-  sleep 0.1
-done
-echo "PostgreSQL started"
 
-# Wait for Redis
-echo "Waiting for Redis..."
-while ! nc -z redis 6379; do
-  sleep 0.1
-done
-echo "Redis started"
+# Function to wait for a service
+wait_for_service() {
+    local host=$1
+    local port=$2
+    local service=$3
+   
+    echo "Waiting for $service..."
+    while ! nc -z $host $port; do
+        sleep 0.1
+    done
+    echo "$service started"
+}
+
+# Wait for required services
+wait_for_service db 5432 "PostgreSQL"
+wait_for_service redis 6379 "Redis"
 
 # Create database if it doesn't exist
 echo "Creating database if it doesn't exist..."
-PGPASSWORD=$DB_PASS psql -h db -U $DB_USER -tc "SELECT 1 FROM pg_database WHERE datname = '$DB_NAME'" | grep -q 1 || PGPASSWORD=$DB_PASS psql -h db -U $DB_USER -c "CREATE DATABASE $DB_NAME"
+PGPASSWORD=$DB_PASS psql -h db -U $DB_USER -tc "SELECT 1 FROM pg_database WHERE datname = '$DB_NAME'" | grep -q 1 || \
+    PGPASSWORD=$DB_PASS psql -h db -U $DB_USER -c "CREATE DATABASE $DB_NAME"
 
 # Wait a bit for database to be created
 sleep 2
@@ -24,6 +29,11 @@ sleep 2
 echo "Applying database migrations..."
 python manage.py migrate
 
-# Start server using Daphne
-echo "Starting server with Daphne..."
-daphne -b 0.0.0.0 -p 8000 app.asgi:application
+# Start uvicorn with hot reload
+echo "Starting uvicorn server..."
+uvicorn app.asgi:application \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --reload \
+    --reload-dir . \
+    --ws websockets

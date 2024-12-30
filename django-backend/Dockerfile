@@ -11,7 +11,8 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y postgresql-client netcat-traditional && \
     pip install --upgrade pip && \
-    pip install pipenv
+    pip install pipenv && \
+    pip install websockets uvicorn[standard]
 
 # Copy dependency files
 COPY Pipfile Pipfile.lock ./

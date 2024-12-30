@@ -14,8 +14,8 @@ psycopg2 = "*"
 requests = "*"
 channels = "*"
 channels-redis = "*"
-daphne = "*"
-watchdog= "*"
+uvicorn = {extras = ["standard"], version = "*"}
+websockets = "*"
 
 [dev-packages]
 
