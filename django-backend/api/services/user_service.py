@@ -1,20 +1,27 @@
-# api/services/user_service.py
 from django.db import models
 from channels.db import database_sync_to_async
 from api.models import User
+import random
+import string
 
 class UserService:
     @database_sync_to_async
-    def create_user(self, name, iban, initial_balance=0):
+    def create_user(self, name, initial_balance=0):
         """
         Asynchronously create a new user with IBAN and balance
         Returns tuple of (user, message)
         """
         try:
-            # Check if user with IBAN or name already exists
-            if User.objects.filter(models.Q(iban=iban) | models.Q(name=name)).exists():
-                return None, "User with this IBAN or name already exists"
-                
+            # Check if user with name already exists
+            if User.objects.filter(name=name).exists():
+                return None, "User with this name already exists"
+            
+            # Generate IBAN and check if it exists
+            while True:
+                iban = self.generate_iban()
+                if not User.objects.filter(iban=iban).exists():
+                    break
+            
             user = User.objects.create(
                 name=name,
                 iban=iban,
@@ -121,3 +128,19 @@ class UserService:
 
         except Exception as e:
                 return False, f"Deposit failed: {str(e)}"
+    
+    def generate_iban(self):
+        """
+        Generate a random IBAN
+        Format: GR + 2 check digits + 3 bank code + 4 branch code + 16 account number
+        """
+        # Country code for Greece
+        country_code = "GR"
+        
+        # Generate random numbers for each part
+        check_digits = ''.join(random.choices(string.digits, k=2))
+        bank_code = ''.join(random.choices(string.digits, k=3))
+        branch_code = ''.join(random.choices(string.digits, k=4))
+        account_number = ''.join(random.choices(string.digits, k=16))
+        
+        return f"{country_code}{check_digits}{bank_code}{branch_code}{account_number}"

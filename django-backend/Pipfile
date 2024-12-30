@@ -16,6 +16,7 @@ channels = "*"
 channels-redis = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 websockets = "*"
+openai = ">=1.0.0"
 
 [dev-packages]
 

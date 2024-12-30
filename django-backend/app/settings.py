@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -158,3 +159,5 @@ LOGGING = {
 }
 
 DEV_DOCS = config('DEV_DOCS', default=False, cast=bool)
+
+OPENAI_API_KEY = config('OPENAI_API_KEY')

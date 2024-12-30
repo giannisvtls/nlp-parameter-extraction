@@ -1,6 +1,8 @@
 version: '3.8'
 services:
   backend:
+    env_file:
+        - ./django-backend/.env.docker
     entrypoint: ["/bin/sh", "/app/entrypoint.sh"]
     build:
       context: ./django-backend
@@ -20,6 +22,7 @@ services:
       - DEV_DOCS=true
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - OPENAI_API_KEY=your_api_key
     depends_on:
       - db
       - redis
@@ -53,7 +56,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - "5432:5432"
+      - "5431:5432"
 
   redis:
     image: redis:7-alpine

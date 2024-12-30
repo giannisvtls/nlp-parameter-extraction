@@ -7,9 +7,15 @@ wait_for_service() {
     local service=$3
    
     echo "Waiting for $service..."
-    while ! nc -z $host $port; do
-        sleep 0.1
-    done
+    if [ "$service" = "PostgreSQL" ]; then
+        until pg_isready -h $host -p $port -U postgres >/dev/null 2>&1; do
+            sleep 1
+        done
+    elif [ "$service" = "Redis" ]; then
+        until echo "PING" | nc -w 1 $host $port | grep -q "PONG"; do
+            sleep 1
+        done
+    fi
     echo "$service started"
 }
 
@@ -23,7 +29,7 @@ PGPASSWORD=$DB_PASS psql -h db -U $DB_USER -tc "SELECT 1 FROM pg_database WHERE 
     PGPASSWORD=$DB_PASS psql -h db -U $DB_USER -c "CREATE DATABASE $DB_NAME"
 
 # Wait a bit for database to be created
-sleep 2
+sleep 5
 
 # Apply database migrations
 echo "Applying database migrations..."
