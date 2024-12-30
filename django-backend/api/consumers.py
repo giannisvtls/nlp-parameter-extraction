@@ -67,11 +67,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             processed_message = processed_result['processed_message']
             bot_response = "I couldn't process that request"
            
-            if processed_message.get('action') == 'REGISTER' and processed_message.get('user_name') and processed_message.get('amount'):
+            if processed_message.get('action') == 'REGISTER' and processed_message.get('user_name'):
                 user_service = UserService()
                 user, message = await self.user_service.create_user(
                     name=processed_message.get('user_name'),
-                    initial_balance=processed_message.get('amount')
+                    initial_balance=processed_message.get('amount', 0)
                 )
                
                 if user:
