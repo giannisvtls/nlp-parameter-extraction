@@ -50,7 +50,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'content': message
         })
         
-        # Process the incoming message with history
+        # Process the incoming message with history by calling OpenAI
         processed_result = await self.openai_service.process_message(message, self.message_history)
         
         # Send the original message to the group
@@ -63,10 +63,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
+        # Process only if the Request to OPEN AI was a success
         if processed_result['status'] == 'success':
             processed_message = processed_result['processed_message']
             bot_response = "I couldn't process that request"
            
+            # HANDLE REGISTRATION
             if processed_message.get('action') == 'REGISTER' and processed_message.get('user_name'):
                 user_service = UserService()
                 user, message = await self.user_service.create_user(
@@ -78,6 +80,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     bot_response = f"Successfully registered user {user.name} with IBAN: {user.iban} and initial balance: {user.balance}"
                 else:
                     bot_response = f"Failed to register user: {message}"
+
+            # TODO ADD HANDLING FOR OTHER ACTIONS
 
             # Add bot response to history
             self.message_history.append({
