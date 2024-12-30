@@ -15,7 +15,7 @@ echo "Redis started"
 
 # Create database if it doesn't exist
 echo "Creating database if it doesn't exist..."
-PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname = '$POSTGRES_DB'" | grep -q 1 || PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U $POSTGRES_USER -c "CREATE DATABASE $POSTGRES_DB"
+PGPASSWORD=$DB_PASS psql -h db -U $DB_USER -tc "SELECT 1 FROM pg_database WHERE datname = '$DB_NAME'" | grep -q 1 || PGPASSWORD=$DB_PASS psql -h db -U $DB_USER -c "CREATE DATABASE $DB_NAME"
 
 # Wait a bit for database to be created
 sleep 2

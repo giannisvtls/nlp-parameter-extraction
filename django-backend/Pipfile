@@ -15,6 +15,7 @@ requests = "*"
 channels = "*"
 channels-redis = "*"
 daphne = "*"
+watchdog= "*"
 
 [dev-packages]
 

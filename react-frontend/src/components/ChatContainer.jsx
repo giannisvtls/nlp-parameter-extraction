@@ -2,8 +2,8 @@ import { Avatar, Button, Card, Col, Input, List, Row, Space, Typography } from '
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useConnectToRoomMutation, useGetMessagesQuery, useSendMessageMutation } from '../store/apiSlice/chatApi'
 
-const SENDER_AVATAR_URL = 'https://public-storage-development.s3.eu-central-1.amazonaws.com/6051da0573c0fe08d75193d4/ZV49Oxa-pokemon.jpg'
-const CURRENT_USER = { name: 'Giannis', avatarUrl: 'https://public-storage-development.s3.eu-central-1.amazonaws.com/6051da0573c0fe08d75193d4/ZV49Oxa-pokemon.jpg' }
+const SENDER_AVATAR_URL = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdZ9dExjxM5bzlQbdh_gLIt2cWMOzQmil8TA&s'
+const CURRENT_USER = { name: 'Giannis', avatarUrl: 'https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=' }
 
 const ChatContainer = () => {
 
@@ -92,7 +92,7 @@ const ChatContainer = () => {
             renderItem={(item) => (
               <List.Item key={item.id} className={item.username !== CURRENT_USER.name ? 'incoming-message' : 'outgoing-message'}>
                 <List.Item.Meta
-                  avatar={ <Avatar src={SENDER_AVATAR_URL}/> }
+                  avatar={ <Avatar src={item.username !== CURRENT_USER.name ? SENDER_AVATAR_URL : CURRENT_USER.avatarUrl}/> }
                   title={item.message}
                   description={
                     <Space direction="vertical" size={0}>

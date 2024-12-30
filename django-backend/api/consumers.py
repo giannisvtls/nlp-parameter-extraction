@@ -5,13 +5,17 @@ from api.services.user_service import UserService
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        print("Attempting to connect...")
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
 
+        print(f"Room name: {self.room_name}")
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
+
+        print("Group added, accepting connection...")
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -39,7 +43,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         # Send automatic reply
-        auto_reply = f"Automatic reply to: {message}"
+        auto_reply = f"Automatic reply to22: {message}"
         await self.channel_layer.group_send(
             self.room_group_name,
             {

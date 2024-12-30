@@ -8,6 +8,8 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - DJANGO_SETTINGS_MODULE=app.settings
+      - DEBUG=True
       - SECRET_KEY=1234
       - DB_NAME=efo_db
       - DB_USER=postgres
