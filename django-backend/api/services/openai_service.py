@@ -1,8 +1,12 @@
 from openai import AsyncOpenAI
 from django.conf import settings
 import json
+from .rag_service import RAGService
 
 SYSTEM_PROMPT = """You are a customer support agent of a Bank in Greece. Users will be asking to perform the following 5 actions: 1)User Registration by giving user name and optionally the initial account balance 2) Current Account balance, 3) Withdraw from balance, 4) Deposit to balance, 5) Transfer money to another account.
+
+Here is some relevant context that might help answer the user's question:
+{context}
 Select the best actions that fits what the bot asked and what the user responded to the question.
 Rules to format your reply
 You MUST format your reply in json using the following schema and if you don't find a value for a parameter don't return the parameter at all:
@@ -16,11 +20,14 @@ You MUST format your reply in json using the following schema and if you don't f
 class OpenAIService:
     def __init__(self):
         self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+        self.rag_service = RAGService()
 
     async def process_message(self, message: str, message_history: list = None) -> dict:
+        # Get relevant context from RAG service
+        context = await self.rag_service.get_relevant_context(message)
         try:
             messages = [
-                {"role": "system", "content": SYSTEM_PROMPT}
+                {"role": "system", "content": SYSTEM_PROMPT.format(context=context)}
             ]
             
             # Add message history if provided
