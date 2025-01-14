@@ -1,10 +1,20 @@
-from django.db import models
+from django.db import models, transaction
 from channels.db import database_sync_to_async
 from api.models import User
 import random
 import string
 
 class UserService:
+    @database_sync_to_async
+    def get_user_by_name(self, name):
+        """
+        Get user by name
+        Returns user object or None if not found
+        """
+        try:
+            return User.objects.get(name=name)
+        except User.DoesNotExist:
+            return None
     @database_sync_to_async
     def create_user(self, name, initial_balance=0):
         """

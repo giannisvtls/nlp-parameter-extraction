@@ -12,8 +12,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.openai_service = OpenAIService()
         self.user_service = UserService()
 
-        # Initialize message history
+        # Initialize message history and user context
         self.message_history = []
+        self.current_user = None  # Store current user's name
+        self.current_iban = None  # Store current user's IBAN
         
         print(f"Room name: {self.room_name}")
         await self.channel_layer.group_add(
@@ -63,25 +65,95 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
-        # Process only if the Request to OPEN AI was a success
-        if processed_result['status'] == 'success':
-            processed_message = processed_result['processed_message']
-            bot_response = "I couldn't process that request"
+            # Process only if the Request to OPEN AI was a success
+            if processed_result['status'] == 'success':
+                processed_message = processed_result['processed_message']
+                bot_response = "I couldn't process that request"
            
-            # HANDLE REGISTRATION
-            if processed_message.get('action') == 'REGISTER' and processed_message.get('user_name'):
-                user_service = UserService()
-                user, message = await self.user_service.create_user(
-                    name=processed_message.get('user_name'),
-                    initial_balance=processed_message.get('amount', 0)
-                )
+                # HANDLE REGISTRATION
+                if processed_message.get('action') == 'REGISTER' and processed_message.get('user_name'):
+                    user_service = UserService()
+                    user, message = await self.user_service.create_user(
+                        name=processed_message.get('user_name'),
+                        initial_balance=processed_message.get('amount', 0)
+                    )
                
-                if user:
-                    bot_response = f"Successfully registered user {user.name} with IBAN: {user.iban} and initial balance: {user.balance}"
-                else:
-                    bot_response = f"Failed to register user: {message}"
+                    if user:
+                        # Store user context after successful registration
+                        self.current_user = user.name
+                        self.current_iban = user.iban
+                        bot_response = f"Successfully registered user {user.name} with IBAN: {user.iban} and initial balance: {user.balance}"
+                    else:
+                        bot_response = f"Failed to register user: {message}"
 
-            # TODO ADD HANDLING FOR OTHER ACTIONS
+                # Handle balance check
+                elif processed_message.get('action') == 'BALANCE':
+                    if self.current_user:
+                        try:
+                            user = await self.user_service.get_user_by_name(self.current_user)
+                            if user:
+                                bot_response = f"Current balance for {user.name}: {user.balance} euros\nYour IBAN: {user.iban}"
+                            else:
+                                bot_response = "Could not find your account. Please register first."
+                        except Exception as e:
+                            bot_response = f"Error retrieving balance: {str(e)}"
+                    else:
+                        bot_response = "Please register first before checking balance."
+
+                # Handle IBAN check
+                elif processed_message.get('action') == 'IBAN':
+                    if self.current_user:
+                        try:
+                            user = await self.user_service.get_user_by_name(self.current_user)
+                            if user:
+                                bot_response = f"Your IBAN is: {user.iban}"
+                            else:
+                                bot_response = "Could not find your account. Please register first."
+                        except Exception as e:
+                            bot_response = f"Error retrieving IBAN: {str(e)}"
+                    else:
+                        bot_response = "Please register first before checking your IBAN."
+
+                # Handle withdrawal
+                elif processed_message.get('action') == 'WITHDRAW':
+                    if self.current_user and processed_message.get('amount'):
+                        success, message = await self.user_service.withdraw(
+                            self.current_user,
+                            processed_message.get('amount')
+                        )
+                        bot_response = message
+                    else:
+                        bot_response = "Please register first and specify an amount to withdraw."
+
+                # Handle deposit
+                elif processed_message.get('action') == 'DEPOSIT':
+                    if self.current_user and processed_message.get('amount'):
+                        success, message = await self.user_service.deposit(
+                            self.current_user,
+                            processed_message.get('amount')
+                        )
+                        bot_response = message
+                    else:
+                        bot_response = "Please register first and specify an amount to deposit."
+
+                # Handle transfer
+                elif processed_message.get('action') == 'TRANSFER':
+                    if self.current_user and processed_message.get('amount') and processed_message.get('iban'):
+                        try:
+                            user = await self.user_service.get_user_by_name(self.current_user)
+                            if user:
+                                success, message = await self.user_service.transfer_money(
+                                    user,
+                                    processed_message.get('amount'),
+                                    processed_message.get('iban')
+                                )
+                                bot_response = message
+                            else:
+                                bot_response = "Could not find your account. Please register first."
+                        except Exception as e:
+                            bot_response = f"Error processing transfer: {str(e)}"
+                    else:
+                        bot_response = "Please register first and provide transfer amount and recipient IBAN."
 
             # Add bot response to history
             self.message_history.append({
