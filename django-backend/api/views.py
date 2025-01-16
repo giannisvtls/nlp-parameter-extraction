@@ -1,11 +1,47 @@
-from rest_framework import generics, permissions, viewsets, filters
+from rest_framework import generics, permissions, viewsets, filters, status
 from rest_framework.schemas.openapi import AutoSchema
+from rest_framework.response import Response
+from rest_framework.decorators import action
 from api.serializers.metadata import ApiMetadataSerializer
 from app.metadata import PROJECT_NAME
 from rest_framework.pagination import PageNumberPagination
 from django.views.generic import TemplateView
-from .models import User
-from api.serializers.api import UserSerializer
+from .models import User, Document
+from api.serializers.api import UserSerializer, DocumentSerializer
+from api.services.rag_service import RAGService
+
+class DocumentViewSet(viewsets.ModelViewSet):
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+    permission_classes = (permissions.AllowAny,)
+    
+    @action(detail=False, methods=['post'])
+    def add_with_embedding(self, request):
+        from asgiref.sync import async_to_sync
+        
+        content = request.data.get('content')
+        if not content:
+            return Response(
+                {'error': 'Content is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            rag_service = RAGService()
+            document = async_to_sync(rag_service.add_document)(content)
+            
+            return Response({
+                'id': document.id,
+                'content': document.content,
+                'created_at': document.created_at,
+                'message': 'Document successfully added with embeddings'
+            }, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to process document: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class IndexView(generics.RetrieveAPIView):
     permission_classes = (permissions.AllowAny,)

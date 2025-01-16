@@ -6,6 +6,7 @@ from rest_framework.schemas import get_schema_view
 from rest_framework.routers import DefaultRouter
 from .views import (
     UserViewSet,
+    DocumentViewSet,
     IndexView,
     ChatRoomView,
     WSCheckView
@@ -14,6 +15,7 @@ from app.metadata import PROJECT_NAME
 
 router = DefaultRouter()
 router.register(r'api/users', UserViewSet)
+router.register(r'api/documents', DocumentViewSet)
 
 urlpatterns = [
     path('', IndexView.as_view(), name='root'),
