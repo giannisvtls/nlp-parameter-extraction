@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker CI
 
 on:
   push:
@@ -7,12 +7,19 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    
+    - name: Build Backend Docker image
+      run: |
+        docker build ./django-backend \
+          --file django-backend/Dockerfile \
+          --tag backend:$(date +%s)
+    
+    - name: Build Frontend Docker image
+      run: |
+        docker build ./react-frontend \
+          --file react-frontend/Dockerfile \
+          --tag frontend:$(date +%s)
