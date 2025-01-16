@@ -12,14 +12,14 @@ RUN apt-get update && \
     apt-get install -y postgresql-client netcat-traditional && \
     pip install --upgrade pip && \
     pip install pipenv && \
-    pipenv lock && \
     pip install websockets uvicorn[standard]
 
 # Copy dependency files
-COPY Pipfile Pipfile.lock ./
+COPY Pipfile ./
 
-# Install dependencies
-RUN pipenv install --system --deploy
+# Generate fresh Pipfile.lock and install dependencies
+RUN pipenv lock && \
+    pipenv install --system --deploy
 
 # Copy project
 COPY . .
