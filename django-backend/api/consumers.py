@@ -65,19 +65,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
-            # Process only if the Request to OPEN AI was a success
-            if processed_result['status'] == 'success':
-                processed_message = processed_result['processed_message']
-                bot_response = "I couldn't process that request"
-           
+        # Process only if the Request to OPEN AI was a success
+        if processed_result['status'] == 'success':
+            processed_message = processed_result['processed_message']
+            bot_response = "I couldn't process that request"
+
+            # Handle different response types
+            if processed_message.get('type') == 'banking_operation':
+                operation = processed_message.get('operation', {})
+                action = operation.get('action')
+                
                 # HANDLE REGISTRATION
-                if processed_message.get('action') == 'REGISTER' and processed_message.get('user_name'):
+                if action == 'REGISTER' and operation.get('user_name'):
                     user_service = UserService()
                     user, message = await self.user_service.create_user(
-                        name=processed_message.get('user_name'),
-                        initial_balance=processed_message.get('amount', 0)
+                        name=operation.get('user_name'),
+                        initial_balance=operation.get('amount', 0)
                     )
-               
+                
                     if user:
                         # Store user context after successful registration
                         self.current_user = user.name
@@ -87,7 +92,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         bot_response = f"Failed to register user: {message}"
 
                 # Handle balance check
-                elif processed_message.get('action') == 'BALANCE':
+                elif action == 'BALANCE':
                     if self.current_user:
                         try:
                             user = await self.user_service.get_user_by_name(self.current_user)
@@ -101,7 +106,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         bot_response = "Please register first before checking balance."
 
                 # Handle IBAN check
-                elif processed_message.get('action') == 'IBAN':
+                elif action == 'IBAN':
                     if self.current_user:
                         try:
                             user = await self.user_service.get_user_by_name(self.current_user)
@@ -115,37 +120,37 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         bot_response = "Please register first before checking your IBAN."
 
                 # Handle withdrawal
-                elif processed_message.get('action') == 'WITHDRAW':
-                    if self.current_user and processed_message.get('amount'):
+                elif action == 'WITHDRAW':
+                    if self.current_user and operation.get('amount'):
                         success, message = await self.user_service.withdraw(
                             self.current_user,
-                            processed_message.get('amount')
+                            operation.get('amount')
                         )
                         bot_response = message
                     else:
                         bot_response = "Please register first and specify an amount to withdraw."
 
                 # Handle deposit
-                elif processed_message.get('action') == 'DEPOSIT':
-                    if self.current_user and processed_message.get('amount'):
+                elif action == 'DEPOSIT':
+                    if self.current_user and operation.get('amount'):
                         success, message = await self.user_service.deposit(
                             self.current_user,
-                            processed_message.get('amount')
+                            operation.get('amount')
                         )
                         bot_response = message
                     else:
                         bot_response = "Please register first and specify an amount to deposit."
 
                 # Handle transfer
-                elif processed_message.get('action') == 'TRANSFER':
-                    if self.current_user and processed_message.get('amount') and processed_message.get('iban'):
+                elif action == 'TRANSFER':
+                    if self.current_user and operation.get('amount') and operation.get('iban'):
                         try:
                             user = await self.user_service.get_user_by_name(self.current_user)
                             if user:
                                 success, message = await self.user_service.transfer_money(
                                     user,
-                                    processed_message.get('amount'),
-                                    processed_message.get('iban')
+                                    operation.get('amount'),
+                                    operation.get('iban')
                                 )
                                 bot_response = message
                             else:
@@ -154,6 +159,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
                             bot_response = f"Error processing transfer: {str(e)}"
                     else:
                         bot_response = "Please register first and provide transfer amount and recipient IBAN."
+
+            # Handle general inquiries
+            elif processed_message.get('type') == 'general_inquiry':
+                bot_response = processed_message.get('response', "I couldn't process that request")
 
             # Add bot response to history
             self.message_history.append({

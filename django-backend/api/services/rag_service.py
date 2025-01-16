@@ -11,7 +11,7 @@ class RAGService:
     async def create_embedding(self, text: str) -> list:
         """Create an embedding vector for the given text"""
         response = await self.client.embeddings.create(
-            model="text-embedding-ada-002",
+            model="text-embedding-3-small",
             input=text
         )
         return response.data[0].embedding
@@ -57,7 +57,6 @@ class RAGService:
         """Get relevant context for a query"""
         query_embedding = await self.create_embedding(query)
         similar_docs = await self.get_similar_documents(query_embedding)
-        
         # Combine content from similar documents
         context = "\n\n".join([doc.content for doc in similar_docs])
         return context if context else ""

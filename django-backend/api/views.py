@@ -16,7 +16,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     
     @action(detail=False, methods=['post'])
-    async def add_with_embedding(self, request):
+    def add_with_embedding(self, request):
+        from asgiref.sync import async_to_sync
+        
         content = request.data.get('content')
         if not content:
             return Response(
@@ -24,14 +26,22 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        rag_service = RAGService()
-        document = await rag_service.add_document(content)
-        
-        return Response({
-            'id': document.id,
-            'content': document.content,
-            'created_at': document.created_at
-        })
+        try:
+            rag_service = RAGService()
+            document = async_to_sync(rag_service.add_document)(content)
+            
+            return Response({
+                'id': document.id,
+                'content': document.content,
+                'created_at': document.created_at,
+                'message': 'Document successfully added with embeddings'
+            }, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to process document: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class IndexView(generics.RetrieveAPIView):
     permission_classes = (permissions.AllowAny,)
