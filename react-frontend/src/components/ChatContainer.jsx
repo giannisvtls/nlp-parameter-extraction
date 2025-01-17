@@ -70,14 +70,12 @@ const ChatContainer = () => {
       >
         <Col xs={24}
           style={{
-            minHeight: '500px',
+            height: '70vh',
             width: '100%',
-            maxHeight: '500px',
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column-reverse',
-            overflow: 'auto'
-
+            padding: '8px'
           }}
         >
           <div ref={messagesEndRef} />
@@ -128,40 +126,40 @@ const ChatContainer = () => {
             size={0}
             direction="vertical"
           >
-            <Space.Compact
-              style={{
-                width: '100%'
-              }}
-            >
-              <Input
-                disabled={!isSendEnabled}
-                className="sendbox-input"
-                value={currentMessage}
-                onChange={(e) => {
-                  setCurrentMessage(e.target.value)
-                }}
-                style={{
-                  borderRadius: 0
-                }}
-                placeholder="Please type your text"
-                onPressEnter={() => {
-                  handleOnSendMessage()
-                }}
-              />
-              <Button
-                style={{
-                  borderRadius: 0
-                }}
-
-                type="primary"
-                onClick={() => {
-                  handleOnSendMessage()
-                }}
-                disabled={!isSendEnabled}
-              >
-                Send
-              </Button>
-            </Space.Compact>
+            <Row gutter={[8, 8]} style={{ padding: '8px' }}>
+              <Col xs={18} sm={20}>
+                <Input
+                  disabled={!isSendEnabled}
+                  className="sendbox-input"
+                  value={currentMessage}
+                  onChange={(e) => {
+                    setCurrentMessage(e.target.value)
+                  }}
+                  style={{
+                    borderRadius: '4px'
+                  }}
+                  placeholder="Please type your text"
+                  onPressEnter={() => {
+                    handleOnSendMessage()
+                  }}
+                />
+              </Col>
+              <Col xs={6} sm={4}>
+                <Button
+                  style={{
+                    width: '100%',
+                    borderRadius: '4px'
+                  }}
+                  type="primary"
+                  onClick={() => {
+                    handleOnSendMessage()
+                  }}
+                  disabled={!isSendEnabled}
+                >
+                  Send
+                </Button>
+              </Col>
+            </Row>
           </Space>
         </Col>
       </Row>

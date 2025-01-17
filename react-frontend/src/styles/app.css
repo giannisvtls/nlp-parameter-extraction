@@ -13,16 +13,8 @@
   }
 
   .message-container-card {
-
-    /* style={{
-      minWidth: '600px',
-      minHeight: '500px',
-      borderRadius: 0,
-      overflow: 'hidden',
-      border: 'none'
-    }} */
-
-    min-width: 600px;
+    width: 100%;
+    max-width: 800px;
     min-height: 500px;
     border-radius: 8px;
     overflow: hidden;
@@ -39,12 +31,24 @@
           flex-direction: row-reverse !important;
           text-align: right;
         }
+
+        @media (max-width: 480px) {
+          .ant-list-item-meta-content {
+            max-width: 80%;
+          }
+        }
       }
     
       .incoming-message {
         .ant-list-item-meta {
           display: flex;
           text-align: left;
+        }
+
+        @media (max-width: 480px) {
+          .ant-list-item-meta-content {
+            max-width: 80%;
+          }
         }
       }
   
