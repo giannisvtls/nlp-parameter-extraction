@@ -1,0 +1,19 @@
+Transactions FAQs
+
+Q: How do deposits work?
+A: To deposit money, simply say "Deposit [amount]". For example, "Deposit 500 euros". The minimum deposit is 1 euro, and the transaction is processed instantly.
+
+Q: How do withdrawals work?
+A: To withdraw money, say "Withdraw [amount]". For example, "Withdraw 200 euros". You must have sufficient balance, and the minimum withdrawal is 1 euro.
+
+Q: How do I transfer money to another account?
+A: Say "Transfer [amount] to [IBAN]". For example, "Transfer 300 euros to GR1234567890". Make sure you have sufficient balance and the recipient's IBAN is correct.
+
+Q: What happens if I try to withdraw more than my balance?
+A: The withdrawal will be rejected with an "Insufficient balance" message. Your balance will remain unchanged.
+
+Q: What happens if I try to transfer money to my own account?
+A: Self-transfers are not allowed. The system will reject transfers where the sender and recipient IBANs are the same.
+
+Q: How do I know if my transaction was successful?
+A: The system provides immediate confirmation messages for all transactions, showing the new balance for deposits/withdrawals or confirmation of successful transfers.

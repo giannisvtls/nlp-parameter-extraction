@@ -1,0 +1,13 @@
+Security and Error Handling FAQs
+
+Q: Are there any transaction limits?
+A: The minimum transaction amount is 1 euro. The maximum withdrawal or transfer amount is limited by your current balance.
+
+Q: How secure are my transactions?
+A: All transactions are atomic (they either complete fully or not at all) and are processed in real-time. Each session maintains your identity securely until you disconnect.
+
+Q: What happens if I make a mistake in a transaction?
+A: Failed transactions (like insufficient balance or invalid IBAN) are completely reversed and don't affect your balance. The system will provide a clear error message explaining what went wrong.
+
+Q: Can I overdraw my account?
+A: No, overdrafts are not allowed. You can only withdraw or transfer up to your available balance.

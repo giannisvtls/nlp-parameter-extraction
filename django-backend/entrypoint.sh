@@ -35,6 +35,17 @@ sleep 5
 echo "Applying database migrations..."
 python manage.py migrate
 
+# Run RAG evaluation tests if enabled
+if [ "$RUN_TESTS" = "true" ]; then
+    echo "Running RAG evaluation tests..."
+    python manage.py test api.tests.test_banking_faqs.TestBankingFAQsEvaluation -v 2 || {
+        echo "RAG evaluation tests completed with failures"
+        # Don't exit - we want to start the server even if tests fail
+    }
+else
+    echo "Skipping tests (RUN_TESTS is not set to true)"
+fi
+
 # Start uvicorn with hot reload
 echo "Starting uvicorn server..."
 uvicorn app.asgi:application \

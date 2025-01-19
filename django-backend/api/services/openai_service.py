@@ -63,13 +63,17 @@ class OpenAIService:
         # Ensure context is a string, use empty string if None
         context = context if context is not None else ""
         try:
-            messages = [
-                {"role": "system", "content": SYSTEM_PROMPT.format(context=context)}
-            ]
-
-            # Add message history if provided
+            # Initialize messages array
+            messages = []
+            
+            # Add message history if provided, otherwise add system prompt
             if message_history:
+                # Only add system prompt if it's not already in history
+                if not any(msg.get('role') == 'system' for msg in message_history):
+                    messages.append({"role": "system", "content": SYSTEM_PROMPT.format(context=context)})
                 messages.extend(message_history)
+            else:
+                messages.append({"role": "system", "content": SYSTEM_PROMPT.format(context=context)})
             
             # Add current message
             messages.append({
@@ -81,10 +85,9 @@ class OpenAIService:
                 response = await self.client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=messages,
-                    temperature=0.7,
+                    temperature=0,
                     max_tokens=1500
                 )
-                print(response)
             except Exception as e:
                 print(f"OpenAI API error: {str(e)}")
                 return {
@@ -98,7 +101,8 @@ class OpenAIService:
                 # Parse the JSON response
                 processed_response = json.loads(processed_response)
             except json.JSONDecodeError:
-                print(f"Failed to parse JSON response: {response.choices[0].message.content}")
+                # Log error without printing the context
+                print("Failed to parse JSON response")
                 processed_response = {"type": "general_inquiry", "response": "I apologize, but I couldn't process your request properly. Could you please rephrase it?"}
             except Exception as e:
                 print(f"Error processing response: {str(e)}")

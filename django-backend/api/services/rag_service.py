@@ -25,7 +25,7 @@ class RAGService:
         )
     
     @database_sync_to_async
-    def get_similar_documents(self, query_embedding: list, num_results: int = 3) -> list:
+    def get_similar_documents(self, query_embedding: list, num_results: int = 1) -> list:
         """Find most similar documents using cosine similarity"""
         documents = Document.objects.all()
         if not documents:
@@ -38,8 +38,9 @@ class RAGService:
                 similarity = self._cosine_similarity(query_embedding, doc.embedding)
                 similarities.append((similarity, doc))
         
-        # Sort by similarity and return top results
+        # Sort by similarity and return top result
         similarities.sort(key=lambda x: x[0], reverse=True)
+        # Only return the single most relevant document
         return [doc for _, doc in similarities[:num_results]]
     
     def _cosine_similarity(self, vec1: list, vec2: list) -> float:
@@ -57,6 +58,6 @@ class RAGService:
         """Get relevant context for a query"""
         query_embedding = await self.create_embedding(query)
         similar_docs = await self.get_similar_documents(query_embedding)
-        # Combine content from similar documents
-        context = "\n\n".join([doc.content for doc in similar_docs])
-        return context if context else ""
+        # Only use the most relevant document
+        context = similar_docs[0].content if similar_docs else ""
+        return context

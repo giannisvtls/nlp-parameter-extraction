@@ -1,6 +1,6 @@
 # AI-Powered Real-Time Chat Analytics
 
-A full-stack application that provides real-time chat analysis using OpenAI's API to extract meaningful parameters from messages and perform dynamic SQL queries. The system utilizes WebSocket connections for instant communication between the frontend and backend.
+A full-stack application that provides real-time chat analysis using OpenAI's API with Retrieval Augmented Generation (RAG) capabilities. The system utilizes WebSocket connections for instant communication between the frontend and backend, and includes intelligent document-based responses for banking-related queries.
 
 ## 🏗️ Architecture
 
@@ -12,9 +12,9 @@ A full-stack application that provides real-time chat analysis using OpenAI's AP
 
 ## 🚀 Features
 
-- Real-time chat interface
-- Automatic parameter extraction from messages using OpenAI
-- Dynamic SQL query generation based on extracted parameters
+- Real-time chat interface with WebSocket communication
+- Intelligent responses using RAG with banking domain knowledge
+- Document-based context retrieval for accurate responses
 - Instant results display through WebSocket connection
 - Scalable architecture with Docker containerization
 
@@ -49,7 +49,7 @@ git clone [repository-url]
 cd [repository-name]
 ```
 
-2. Create a `.env` file in the root directory with your OpenAI API key:
+2. In docker-compose.yml add your OpenAI API-KEY:
 ```bash
 OPENAI_API_KEY=your_api_key_here
 ```
@@ -59,7 +59,22 @@ OPENAI_API_KEY=your_api_key_here
 docker-compose up --build
 ```
 
-4. Access the application:
+4. Add documents to the RAG system:
+```bash
+# Add a document to the system (supports multiple categories: guide, faq, troubleshooting)
+curl -X POST http://localhost:8000/api/documents/add_with_embedding/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "Your document content here",
+  }'
+
+# You can add multiple documents for comprehensive coverage:
+# - Banking FAQs (category: faq)
+# - Troubleshooting guides (category: troubleshooting)
+# - General guides (category: guide)
+```
+
+5. Access the application:
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8000/api
 - API Documentation: http://localhost:8000/docs (when DEV_DOCS=true)
@@ -88,10 +103,24 @@ docker-compose up --build
 
 ```
 .
-├── django-backend/         # Django backend application
-├── react-frontend/        # React frontend application
-├── docker-compose.yml     # Docker composition configuration
-└── README.md             # This file
+├── django-backend/           # Django backend application
+│   ├── api/                 # API implementation
+│   │   ├── documents/       # Banking domain documents
+│   │   ├── services/        # Business logic services
+│   │   ├── tests/          # Test suites
+│   │   └── ...
+│   └── ...
+├── react-frontend/          # React frontend application
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   ├── screens/        # Application screens
+│   │   ├── store/          # Redux store and API
+│   │   └── ...
+│   └── ...
+├── docker-compose.yml       # Docker composition configuration
+├── railway.toml            # Railway deployment configuration
+├── render.yaml             # Render deployment configuration
+└── README.md               # This file
 ```
 
 ## 📝 Development

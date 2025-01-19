@@ -1,0 +1,10 @@
+Account Management FAQs
+
+Q: How do I create a new account?
+A: Simply tell the chatbot your name and optional initial deposit amount. For example, say "Register John with 1000 euros" or just "Register John" for an account with zero balance.
+
+Q: Can I have multiple accounts?
+A: No, the system allows only one account per name.
+
+Q: Can I delete my account?
+A: No, account deletion is not supported in the current system.

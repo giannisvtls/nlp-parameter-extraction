@@ -22,6 +22,7 @@ services:
       - DEV_DOCS=true
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - RUN_TESTS=false
       - OPENAI_API_KEY=your_api_key
     depends_on:
       - db

@@ -1,0 +1,10 @@
+Balance and IBAN FAQs
+
+Q: How can I check my account balance?
+A: You can ask "What's my balance?", "Show my balance", or "Check balance". The system will show your current balance along with your IBAN for reference.
+
+Q: What is an IBAN and why do I need it?
+A: IBAN (International Bank Account Number) is your unique account identifier. It starts with "GR" followed by numbers. You need it to receive money transfers from other accounts. You can check your IBAN by asking "What's my IBAN?"
+
+Q: What should I do if I forget my IBAN?
+A: You can check your IBAN by asking "What's my IBAN?"

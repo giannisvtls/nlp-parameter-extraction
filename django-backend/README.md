@@ -1,12 +1,14 @@
 # AI-Enhanced Django Backend
 
-A Django backend service that provides WebSocket communication for real-time chat analysis using OpenAI's API, with PostgreSQL for data storage and Redis for WebSocket channel layers.
+A Django backend service that provides WebSocket communication for real-time chat analysis using OpenAI's API with Retrieval Augmented Generation (RAG) capabilities. The system includes document-based context retrieval for banking-related queries, PostgreSQL for data storage, and Redis for WebSocket channel layers.
 
 ## 🔑 Key Features
 
 - WebSocket integration using Django Channels
 - Real-time message processing with OpenAI API
-- Dynamic SQL query generation
+- RAG-powered intelligent responses
+- Banking domain knowledge integration
+- Document-based context retrieval
 - RESTful API endpoints
 - PostgreSQL database integration
 - Redis for WebSocket channel layers
@@ -27,6 +29,15 @@ A Django backend service that provides WebSocket communication for real-time cha
 - PostgreSQL
 - Redis
 - OpenAI API Key
+
+Requirements can be installed via either:
+```bash
+pip install -r requirements.txt
+```
+or
+```bash
+pipenv install
+```
 
 ## 🚀 Running the Project
 
@@ -110,31 +121,46 @@ Access the OpenAPI documentation at:
 ```
 django-backend/
 ├── api/                  # API application
+│   ├── documents/       # Banking domain documents
+│   │   ├── banking_faqs_account.txt
+│   │   ├── banking_faqs_balance.txt
+│   │   ├── banking_faqs_security.txt
+│   │   ├── banking_faqs_transactions.txt
+│   │   ├── banking_guide.txt
+│   │   └── banking_troubleshooting.txt
 │   ├── migrations/      # Database migrations
 │   ├── serializers/     # API serializers
 │   │   ├── api.py
 │   │   └── metadata.py
+│   ├── services/        # Business logic services
+│   │   ├── openai_service.py
+│   │   ├── rag_service.py
+│   │   └── user_service.py
 │   ├── templates/       # API templates
-│   │   └── swagger-ui.html
+│   ├── tests/          # Test suites
 │   ├── admin.py        # Admin interface configuration
 │   ├── apps.py         # App configuration
 │   ├── consumers.py    # WebSocket consumers
 │   ├── models.py       # Database models
 │   ├── routing.py      # WebSocket routing
-│   ├── test.py         # Test files
 │   ├── urls.py         # URL configurations
 │   └── views.py        # API views
 ├── app/                 # Core application
 ├── .dockerignore       # Docker ignore file
 ├── .env.docker         # Docker environment variables
 ├── .env.sample         # Sample environment file
-├── .gitignore         # Git ignore file
 ├── Dockerfile         # Docker configuration
 ├── entrypoint.sh      # Docker entrypoint script
 ├── manage.py          # Django management script
 ├── Pipfile           # Pipenv dependencies
-├── Pipfile.lock      # Pipenv lock file
 └── README.md         # Project documentation
+```
+
+## 🚀 Deployment Options
+
+### Local Docker Deployment
+```bash
+docker-compose up backend
 ```
 
 ## 📄 License
