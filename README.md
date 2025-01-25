@@ -1,6 +1,4 @@
-# AI-Powered Real-Time Chat Analytics
-
-## Description
+# Description
 
 A full-stack application that provides real-time chat analysis using OpenAI's API with Retrieval Augmented Generation (RAG) capabilities. The system utilizes WebSocket connections for instant communication between the frontend and backend, and includes intelligent document-based responses for banking-related queries.
 
